@@ -6,222 +6,71 @@
     <title>Yami Hosting | محرك حقوق سوفييت</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #6e57e0;
-            --accent: #ff4d4d;
-            --bg: #0b0e14;
-            --card-bg: #151921;
-            --text: #e1e1e1;
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* خلفية الأنمي المتحركة */
-        .anime-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(11, 14, 20, 0.8), rgba(11, 14, 20, 0.8)),
-                        url('https://wallpaperaccess.com/full/199484.jpg'); /* يمكنك تغيير الرابط لصورة أنمي تحبها */
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-            filter: blur(3px);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .glass-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 { color: var(--primary); font-size: 2.5rem; text-shadow: 0 0 15px var(--primary); }
-        
-        .input-group {
-            margin: 25px 0;
-            display: flex;
-            gap: 10px;
-            flex-direction: column;
-        }
-
-        input {
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            background: #1c222d;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            border: 2px solid transparent;
-            transition: 0.3s;
-        }
-
-        input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
-
-        button {
-            padding: 15px 30px;
-            border-radius: 10px;
-            border: none;
-            background: var(--primary);
-            color: #white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 1.1rem;
-        }
-
-        button:hover { transform: scale(1.05); background: #5a46c7; }
-
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #000;
-            border-radius: 10px;
-            display: none;
-            word-break: break-all;
-        }
-
-        .footer {
-            margin-top: 50px;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        /* واجهة عرض الموقع المستضاف */
-        #site-viewer {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: none;
-            display: none;
-            background: #fff;
-            z-index: 9999;
-        }
-
-        .close-btn {
-            position: fixed;
-            top: 20px; right: 20px;
-            z-index: 10000;
-            background: var(--accent);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-        }
+        :root { --primary: #6e57e0; --accent: #ff4d4d; --bg: #0b0e14; --card-bg: #151921; --text: #e1e1e1; }
+        body, html { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: sans-serif; overflow-x: hidden; height: 100%; }
+        .anime-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(11,14,20,0.8), rgba(11,14,20,0.8)), url('https://wallpaperaccess.com/full/199484.jpg'); background-size: cover; z-index: -1; filter: blur(3px); }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; text-align: center; }
+        .glass-card { background: var(--card-bg); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        h1 { color: var(--primary); text-shadow: 0 0 15px var(--primary); }
+        .input-group { margin: 25px 0; display: flex; flex-direction: column; gap: 10px; }
+        input { padding: 15px; border-radius: 10px; border: 2px solid transparent; background: #1c222d; color: #fff; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--primary); }
+        button { padding: 15px; border-radius: 10px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
+        .result-box { margin-top: 20px; padding: 15px; background: #000; border-radius: 10px; display: none; }
+        #site-viewer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: none; display: none; z-index: 9999; background: white; }
+        .close-btn { position: fixed; top: 10px; right: 10px; z-index: 10000; background: var(--accent); color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer; display: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="anime-bg"></div>
-
-<div id="closeBtn" class="close-btn" onclick="location.reload()">إغلاق المعاينة ×</div>
+<div id="closeBtn" class="close-btn" onclick="location.href=window.location.pathname">إغلاق المعاينة ×</div>
 
 <div class="container" id="mainDashboard">
     <div class="glass-card">
-        <h1><i class="fas fa-cloud-upload-alt"></i> Yami Hosting</h1>
-        <p>استضافة ذكية فورية عبر مستودعات GitHub</p>
-        
+        <h1><i class="fas fa-bolt"></i> Yami Hosting</h1>
+        <p>استضافة سوفييتية ذكية - المبرمج Yami</p>
         <div class="input-group">
-            <input type="text" id="ghUser" placeholder="اسم المستخدم في GitHub (مثال: omar7ym)">
-            <input type="text" id="ghRepo" placeholder="اسم المستودع (مثال: bank-project)">
-            <button onclick="generateLink()">توليد رابط الاستضافة 🚀</button>
+            <input type="text" id="ghUser" placeholder="اسم المستخدم (مثل: omar7ym)">
+            <input type="text" id="ghRepo" placeholder="اسم المستودع (مثل: bank)">
+            <button onclick="generateLink()">توليد وتشغيل 🚀</button>
         </div>
-
         <div id="resultBox" class="result-box">
-            <p>رابط موقعك المباشر:</p>
+            <p>الرابط المباشر:</p>
             <code id="finalLink" style="color: #00ffcc;"></code>
-            <br><br>
-            <button onclick="viewSite()" style="background: var(--accent); padding: 8px 15px; font-size: 0.9rem;">تشغيل الآن</button>
         </div>
     </div>
-
-    <div class="footer">
-        <p>جميع الحقوق محفوظة &copy; 2026 | <strong>حقوق سوفييت</strong></p>
-        <p>المبرمج: <span style="color: var(--primary);">Yami</span></p>
-    </div>
+    <div style="margin-top: 30px; opacity: 0.6;">حقوق سوفييت &copy; 2026</div>
 </div>
 
 <iframe id="site-viewer"></iframe>
 
 <script>
-    // 1. توليد الرابط وحفظه
     function generateLink() {
         const user = document.getElementById('ghUser').value.trim();
         const repo = document.getElementById('ghRepo').value.trim();
-        
-        if(!user || !repo) {
-            alert("يرجى إدخال البيانات كاملة!");
-            return;
-        }
-
-        const currentUrl = window.location.href.split('?')[0];
-        const hostLink = `${currentUrl}?u=${user}&r=${repo}`;
-        
-        document.getElementById('finalLink').innerText = hostLink;
+        if(!user || !repo) return alert("أدخل البيانات!");
+        const link = `${window.location.origin}${window.location.pathname}?u=${user}&r=${repo}`;
+        document.getElementById('finalLink').innerText = link;
         document.getElementById('resultBox').style.display = 'block';
-    }
-
-    // 2. محرك التشغيل (الذي يقرأ الرابط ويجلب الكود)
-    async function initEngine() {
-        const params = new URLSearchParams(window.location.search);
-        const user = params.get('u');
-        const repo = params.get('r');
-
-        if(user && repo) {
-            document.getElementById('mainDashboard').style.display = 'none';
-            const viewer = document.getElementById('site-viewer');
-            const closeBtn = document.getElementById('closeBtn');
-            
-            viewer.style.display = 'block';
-            closeBtn.style.display = 'block';
-
-            // الرابط المباشر للملف من جيت هوب
-            const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/main/index.html`;
-
-            try {
-                const response = await fetch(rawUrl);
-                if(!response.ok) throw new Error();
-                let html = await response.text();
-
-                // إصلاح الروابط النسبية (صور، CSS، JS) لتشير لـ GitHub مباشرة
-                const baseRawPath = `https://raw.githubusercontent.com/${user}/${repo}/main/`;
-                html = html.replace(/(src|href)=["'](?!http|https)(.*?)["']/g, `$1="${baseRawPath}$2"`);
-
-                const doc = viewer.contentWindow.document;
-                doc.open();
-                doc.write(html);
-                doc.close();
-            } catch (e) {
-                alert("تعذر جلب الملف. تأكد أن المستودع العام (Public) وأن الملف اسمه index.html");
-                location.href = window.location.href.split('?')[0];
-            }
-        }
-    }
-
-    function viewSite() {
-        const link = document.getElementById('finalLink').innerText;
         window.location.href = link;
     }
 
-    // تشغيل المحرك عند تحميل الصفحة
-    window.onload = initEngine;
+    function init() {
+        const p = new URLSearchParams(window.location.search);
+        const u = p.get('u'), r = p.get('r');
+        if(u && r) {
+            document.getElementById('mainDashboard').style.display = 'none';
+            const v = document.getElementById('site-viewer');
+            const c = document.getElementById('closeBtn');
+            v.style.display = 'block';
+            c.style.display = 'block';
+            
+            // استخدام JsDelivr كـ Proxy لأنه يدعم الـ Content-Type الصحيح للمتصفح
+            v.src = `https://cdn.jsdelivr.net/gh/${u}/${r}@main/index.html`;
+        }
+    }
+    window.onload = init;
 </script>
-
 </body>
 </html>
