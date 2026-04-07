@@ -3,209 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اسألني - Ask Me</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <title>Yami Hosting | محرك حقوق سوفييت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #ff4d79;
-            --secondary: #7a003c;
-            --dark-bg: #121212;
-            --card-bg: rgba(255, 255, 255, 0.08);
+            --primary: #6e57e0;
+            --accent: #ff4d4d;
+            --bg: #0b0e14;
+            --card-bg: #151921;
+            --text: #e1e1e1;
         }
 
-        body {
+        body, html {
             margin: 0; padding: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* خلفية الأنمي المتحركة */
+        .anime-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(11, 14, 20, 0.8), rgba(11, 14, 20, 0.8)),
+                        url('https://wallpaperaccess.com/full/199484.jpg'); /* يمكنك تغيير الرابط لصورة أنمي تحبها */
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: blur(3px);
         }
 
         .container {
-            width: 90%; max-width: 450px;
-            background: var(--card-bg); backdrop-filter: blur(15px);
-            border-radius: 25px; padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            text-align: center; position: relative;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
         }
 
-        .step { display: none; }
-        .step.active { display: block; }
-
-        .progress-bar {
-            position: absolute; top: 0; left: 0; height: 6px;
-            background: var(--primary); transition: 0.5s; border-radius: 25px 25px 0 0;
+        .glass-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
         }
 
-        h2 { font-size: 1.4rem; margin-bottom: 20px; color: #ffcae0; }
+        h1 { color: var(--primary); font-size: 2.5rem; text-shadow: 0 0 15px var(--primary); }
         
-        /* Grid للشخصيات والنماذج */
-        .selection-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;
+        .input-group {
+            margin: 25px 0;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
         }
 
-        .item-card {
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px;
-            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        input {
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: #1c222d;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            border: 2px solid transparent;
+            transition: 0.3s;
         }
 
-        .item-card:hover, .item-card.selected {
-            border-color: var(--primary); background: rgba(255,77,121,0.2);
+        input:focus { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+        button {
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary);
+            color: #white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.1rem;
         }
 
-        .item-card img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+        button:hover { transform: scale(1.05); background: #5a46c7; }
 
-        input, select, textarea {
-            width: 100%; padding: 15px; border-radius: 12px; border: none;
-            background: rgba(0,0,0,0.4); color: white; margin-bottom: 15px;
-            box-sizing: border-box; outline: none; border: 1px solid rgba(255,255,255,0.1);
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #000;
+            border-radius: 10px;
+            display: none;
+            word-break: break-all;
         }
 
-        .btn {
-            background: linear-gradient(90deg, #ff4d79, #ff1a53);
-            color: white; border: none; padding: 15px; border-radius: 50px;
-            width: 100%; font-weight: bold; cursor: pointer; transition: 0.3s;
-            margin-top: 10px;
+        .footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
 
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* واجهة عرض الموقع المستضاف */
+        #site-viewer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+            display: none;
+            background: #fff;
+            z-index: 9999;
+        }
 
-        .footer { font-size: 0.7rem; margin-top: 20px; opacity: 0.5; }
+        .close-btn {
+            position: fixed;
+            top: 20px; right: 20px;
+            z-index: 10000;
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<div class="container animate__animated animate__fadeIn">
-    <div id="progress" class="progress-bar" style="width: 10%;"></div>
+<div class="anime-bg"></div>
 
-    <div id="step1" class="step active">
-        <h2>🧸 اختر الشخصية</h2>
-        <div class="selection-grid">
-            <div class="item-card" onclick="selectItem('char', 'باتركب', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf_xN66oY6O2p5-E9e_qH_fT1O-D-7E8eU4Q&s')">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf_xN66oY6O2p5-E9e_qH_fT1O-D-7E8eU4Q&s"><p>باتركب</p>
-            </div>
-            <div class="item-card" onclick="selectItem('char', 'بابلز', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzYvA6-S9_vW9iH8uXoFk1X0wz5qY5fE9e_A&s')">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzYvA6-S9_vW9iH8uXoFk1X0wz5qY5fE9e_A&s"><p>بابلز</p>
-            </div>
-            <div class="item-card" onclick="selectItem('char', 'ماشا', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz-Y5fE9e_A-S9_vW9iH8uXoFk1X0wz5qY&s')">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz-Y5fE9e_A-S9_vW9iH8uXoFk1X0wz5qY&s"><p>ماشا</p>
-            </div>
-            <div class="item-card" onclick="selectItem('char', 'هيلو كيتي', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6-Y5fE9e_A-S9_vW9iH8uXoFk1X0wz5qY&s')">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6-Y5fE9e_A-S9_vW9iH8uXoFk1X0wz5qY&s"><p>هيلو كيتي</p>
-            </div>
+<div id="closeBtn" class="close-btn" onclick="location.reload()">إغلاق المعاينة ×</div>
+
+<div class="container" id="mainDashboard">
+    <div class="glass-card">
+        <h1><i class="fas fa-cloud-upload-alt"></i> Yami Hosting</h1>
+        <p>استضافة ذكية فورية عبر مستودعات GitHub</p>
+        
+        <div class="input-group">
+            <input type="text" id="ghUser" placeholder="اسم المستخدم في GitHub (مثال: omar7ym)">
+            <input type="text" id="ghRepo" placeholder="اسم المستودع (مثال: bank-project)">
+            <button onclick="generateLink()">توليد رابط الاستضافة 🚀</button>
         </div>
-        <button class="btn" onclick="goToStep(2)">التالي</button>
+
+        <div id="resultBox" class="result-box">
+            <p>رابط موقعك المباشر:</p>
+            <code id="finalLink" style="color: #00ffcc;"></code>
+            <br><br>
+            <button onclick="viewSite()" style="background: var(--accent); padding: 8px 15px; font-size: 0.9rem;">تشغيل الآن</button>
+        </div>
     </div>
 
-    <div id="step2" class="step">
-        <h2>📑 اختر نموذج الرسالة</h2>
-        <select id="template">
-            <option value="حب حنون">😊 حب حنون</option>
-            <option value="صداقة">🤝 صداقة</option>
-            <option value="اشتياق">😢 اشتياق</option>
-            <option value="اعتذار">🥺 اعتذار ومصالحة</option>
-            <option value="عاصفة">🌪️ عاصفة</option>
-        </select>
-        <button class="btn" onclick="goToStep(3)">التالي</button>
+    <div class="footer">
+        <p>جميع الحقوق محفوظة &copy; 2026 | <strong>حقوق سوفييت</strong></p>
+        <p>المبرمج: <span style="color: var(--primary);">Yami</span></p>
     </div>
-
-    <div id="step3" class="step">
-        <h2>👤 معلوماتك ومعلومات الطرف الآخر</h2>
-        <input type="text" id="senderName" placeholder="اسمك (مثلاً: حسين)">
-        <input type="text" id="receiverName" placeholder="اسم حبيبك / صديقك">
-        <select id="relation">
-            <option value="حبيب/ـة">❤️ حبيب/ـة</option>
-            <option value="صديق/ـة">🤝 صديق/ـة</option>
-        </select>
-        <button class="btn" onclick="goToStep(4)">التالي</button>
-    </div>
-
-    <div id="step4" class="step">
-        <h2>✍️ رسالتك</h2>
-        <textarea id="customMsg" placeholder="اكتب رسالتك هنا (اختياري)"></textarea>
-        <input type="text" id="songUrl" placeholder="رابط يوتيوب أو ساوندكلاود">
-        <button class="btn" id="createBtn" onclick="createMessage()">إنشاء الرسالة 💌</button>
-    </div>
-
-    <div id="step5" class="step">
-        <img src="https://api.iconify.design/noto:party-popper.svg" width="80">
-        <h2>تم إنشاء رسالتك بنجاح!</h2>
-        <input type="text" id="finalLink" readonly>
-        <button class="btn" onclick="copyLink()">📋 نسخ الرابط</button>
-        <button class="btn" style="background: #333;" onclick="location.reload()">✨ إنشاء رسالة جديدة</button>
-    </div>
-
-    <div class="footer">Soviet Rights - حقوق سوفييت © 2026</div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+<iframe id="site-viewer"></iframe>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyA3UW1QxQx3VeYldsHnVtSGAQOxZZ9FOOU",
-        authDomain: "kalmni-b7561.firebaseapp.com",
-        projectId: "kalmni-b7561",
-        storageBucket: "kalmni-b7561.firebasestorage.app",
-        messagingSenderId: "852080036145",
-        appId: "1:852080036145:web:216a00ee861a0e534bc810"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // متغيرات الاختيارات
-    let selectedChar = "";
-    let selectedCharImg = "";
-
-    window.selectItem = (type, name, img) => {
-        selectedChar = name;
-        selectedCharImg = img;
-        document.querySelectorAll('.item-card').forEach(el => el.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-    };
-
-    window.goToStep = (n) => {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + n).classList.add('active');
-        document.getElementById('progress').style.width = (n * 20) + '%';
-    };
-
-    window.createMessage = async () => {
-        const btn = document.getElementById('createBtn');
-        btn.disabled = true;
-        btn.innerText = "جاري الإنشاء...";
-
-        const data = {
-            char: selectedChar,
-            charImg: selectedCharImg,
-            template: document.getElementById('template').value,
-            sender: document.getElementById('senderName').value,
-            receiver: document.getElementById('receiverName').value,
-            relation: document.getElementById('relation').value,
-            message: document.getElementById('customMsg').value,
-            song: document.getElementById('songUrl').value,
-            createdAt: new Date()
-        };
-
-        try {
-            const docRef = await addDoc(collection(db, "messages"), data);
-            // هنا ننشئ الرابط (استخدمت Netlify كمثال للرابط)
-            const myUrl = window.location.origin + "/view.html?id=" + docRef.id;
-            document.getElementById('finalLink').value = myUrl;
-            goToStep(5);
-        } catch (e) {
-            alert("خطأ في الاتصال بفايربيس: " + e.message);
-            btn.disabled = false;
+<script>
+    // 1. توليد الرابط وحفظه
+    function generateLink() {
+        const user = document.getElementById('ghUser').value.trim();
+        const repo = document.getElementById('ghRepo').value.trim();
+        
+        if(!user || !repo) {
+            alert("يرجى إدخال البيانات كاملة!");
+            return;
         }
-    };
 
-    window.copyLink = () => {
-        const linkInput = document.getElementById('finalLink');
-        linkInput.select();
-        document.execCommand('copy');
-        alert("تم نسخ الرابط بنجاح!");
-    };
+        const currentUrl = window.location.href.split('?')[0];
+        const hostLink = `${currentUrl}?u=${user}&r=${repo}`;
+        
+        document.getElementById('finalLink').innerText = hostLink;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    // 2. محرك التشغيل (الذي يقرأ الرابط ويجلب الكود)
+    async function initEngine() {
+        const params = new URLSearchParams(window.location.search);
+        const user = params.get('u');
+        const repo = params.get('r');
+
+        if(user && repo) {
+            document.getElementById('mainDashboard').style.display = 'none';
+            const viewer = document.getElementById('site-viewer');
+            const closeBtn = document.getElementById('closeBtn');
+            
+            viewer.style.display = 'block';
+            closeBtn.style.display = 'block';
+
+            // الرابط المباشر للملف من جيت هوب
+            const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/main/index.html`;
+
+            try {
+                const response = await fetch(rawUrl);
+                if(!response.ok) throw new Error();
+                let html = await response.text();
+
+                // إصلاح الروابط النسبية (صور، CSS، JS) لتشير لـ GitHub مباشرة
+                const baseRawPath = `https://raw.githubusercontent.com/${user}/${repo}/main/`;
+                html = html.replace(/(src|href)=["'](?!http|https)(.*?)["']/g, `$1="${baseRawPath}$2"`);
+
+                const doc = viewer.contentWindow.document;
+                doc.open();
+                doc.write(html);
+                doc.close();
+            } catch (e) {
+                alert("تعذر جلب الملف. تأكد أن المستودع العام (Public) وأن الملف اسمه index.html");
+                location.href = window.location.href.split('?')[0];
+            }
+        }
+    }
+
+    function viewSite() {
+        const link = document.getElementById('finalLink').innerText;
+        window.location.href = link;
+    }
+
+    // تشغيل المحرك عند تحميل الصفحة
+    window.onload = initEngine;
 </script>
 
 </body>
